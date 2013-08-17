@@ -4,13 +4,13 @@ namespace TexasHoldemHandEvaluator
 {
 	public class Card : IComparable
 	{
-		public Value Value { get; private set; }
-		public Suit Suit { get; private set; }
+		public Value value { get; private set; }
+		public Suit suit { get; private set; }
 
 		public Card ( Suit s, Value v)
 		{
-			Value = v;
-			Suit = s;
+			value = v;
+			suit = s;
 		}
 
 		public int CompareTo(Object obj)
@@ -20,7 +20,7 @@ namespace TexasHoldemHandEvaluator
 
 			Card c = obj as Card;
 			if (c != null) {
-				return this.Value - c.Value;
+				return this.value - c.value;
 			} else {
 				throw new ArgumentException ("Object is not a Card");
 			}
@@ -28,46 +28,46 @@ namespace TexasHoldemHandEvaluator
 
 		public Card DeepCopy()
 		{
-			return new Card (this.Suit, this.Value);
+			return new Card (this.suit, this.value);
 		}
 
 		public override string ToString()
 		{
 			String s = "";
-			if(this.Value == Value.Ace)
+			if(this.value == Value.Ace)
 				s += "A";
-			else if(this.Value == Value.King)
+			else if(this.value == Value.King)
 				s += "K";
-			else if(this.Value == Value.Queen)
+			else if(this.value == Value.Queen)
 				s += "Q";
-			else if(this.Value == Value.Jack)
+			else if(this.value == Value.Jack)
 				s += "J";
-			else if(this.Value == Value.Ten)
+			else if(this.value == Value.Ten)
 				s += "T";
-			else if(this.Value == Value.Nine)
+			else if(this.value == Value.Nine)
 				s += "9";
-			else if(this.Value == Value.Eight)
+			else if(this.value == Value.Eight)
 				s += "8";
-			else if(this.Value == Value.Seven)
+			else if(this.value == Value.Seven)
 				s += "7";
-			else if(this.Value == Value.Six)
+			else if(this.value == Value.Six)
 				s += "6";
-			else if(this.Value == Value.Five)
+			else if(this.value == Value.Five)
 				s += "5";
-			else if(this.Value == Value.Four)
+			else if(this.value == Value.Four)
 				s += "4";
-			else if(this.Value == Value.Three)
+			else if(this.value == Value.Three)
 				s += "3";
-			else if(this.Value == Value.Two)
+			else if(this.value == Value.Two)
 				s += "2";
 
-			if(this.Suit == Suit.Spades)
+			if(this.suit == Suit.Spades)
 				s += "s";
-			else if(this.Suit == Suit.Clubs)
+			else if(this.suit == Suit.Clubs)
 				s += "c";
-			else if(this.Suit == Suit.Diamonds)
+			else if(this.suit == Suit.Diamonds)
 				s += "d";
-			else if(Suit == Suit.Hearts)
+			else if(suit == Suit.Hearts)
 				s += "h";
 
 			return s;
@@ -88,7 +88,11 @@ namespace TexasHoldemHandEvaluator
 				return false;
 			}
 
-			return (c.Value == this.Value);
+			return (c.value == this.value);
+		}
+
+		public override int GetHashCode() {
+			return Tuple.Create(value, suit).GetHashCode();
 		}
 	}
 

@@ -28,11 +28,11 @@ namespace TexasHoldemHandEvaluator
 		{
 			cards.Sort ();
 			cards.Reverse ();
-			Value curVal = cards[0].Value;
+			Value curVal = cards[0].value;
 			Value highestCard = curVal;
 			int count = 1;
 			for (int i = 0; i < cards.Count; i++) {
-				if (cards [i].Value == curVal - 1) {
+				if (cards [i].value == curVal - 1) {
 					count++;
 					if (count >= 5) {
 						//we are done
@@ -54,7 +54,7 @@ namespace TexasHoldemHandEvaluator
 					return "";
 				}
 				//there might still be a straight
-				highestCard = cards [i].Value;
+				highestCard = cards [i].value;
 				curVal = highestCard;
 				count = 1;
 			}
@@ -68,10 +68,10 @@ namespace TexasHoldemHandEvaluator
 		{
 			var counts = new Dictionary<Value, int> ();
 			foreach (Card c in cards) {
-				if (counts.ContainsKey (c.Value)) {
-					counts [c.Value] += 1;
+				if (counts.ContainsKey (c.value)) {
+					counts [c.value] += 1;
 				} else {
-					counts.Add (c.Value, 1);
+					counts.Add (c.value, 1);
 				}
 			}
 			Value highestSeen = 0;
@@ -93,10 +93,10 @@ namespace TexasHoldemHandEvaluator
 		{
 			var counts = new Dictionary<Value, int>();
 			foreach(Card c in cards) {
-				if(counts.ContainsKey(c.Value)) {
-					counts[c.Value] += 1;
+				if(counts.ContainsKey(c.value)) {
+					counts[c.value] += 1;
 				} else {
-					counts.Add(c.Value, 1);
+					counts.Add(c.value, 1);
 				}
 			}
 			foreach(KeyValuePair<Value, int> kvp in counts) {
