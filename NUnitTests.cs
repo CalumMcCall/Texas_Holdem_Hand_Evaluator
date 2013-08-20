@@ -499,7 +499,7 @@ namespace TexasHoldemHandEvaluator
 			hc.Add (new Card(Suit.Hearts, Value.Four));
 			hc.Add (new Card(Suit.Clubs, Value.Three));
 			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasHighCard());
+			Assert.AreEqual ("Nine", test.HasHighCard());
 		}
 	}
 }

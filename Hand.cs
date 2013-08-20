@@ -22,7 +22,7 @@ namespace TexasHoldemHandEvaluator
 			}
 		}
 
-		private Hand (List<Card> cs)
+		Hand (List<Card> cs)
 		{
 			cards = new List<Card> ();
 			foreach(Card c in cs)
@@ -44,14 +44,14 @@ namespace TexasHoldemHandEvaluator
 					flushCards.Add(c);
 				}
 			}
-			Hand newHand = new Hand(flushCards);
+			var newHand = new Hand(flushCards);
 			String card = newHand.HasStraight();
 			if(card == ""){
 				return null;
 			}
 
 			try {
-				Value handValue = (Value) Enum.Parse(typeof(Value), card);
+				var handValue = (Value) Enum.Parse(typeof(Value), card);
 				if(Enum.IsDefined(typeof(Value), handValue)) {
 					return new Card(highest.suit, handValue);
 				}
@@ -66,15 +66,7 @@ namespace TexasHoldemHandEvaluator
 		 * an empty string if there are no quads */
 		public String HasQuads()
 		{
-			var counts = new Dictionary<Value, int>();
-			foreach(Card c in cards) {
-				if(counts.ContainsKey(c.value)) {
-					counts[c.value] += 1;
-				} else {
-					counts.Add(c.value, 1);
-				}
-			}
-			foreach(KeyValuePair<Value, int> kvp in counts) {
+			foreach(KeyValuePair<Value, int> kvp in getValueCounts ()) {
 				if(kvp.Value == 4) {
 					return kvp.Key.ToString();
 				}
@@ -155,16 +147,8 @@ namespace TexasHoldemHandEvaluator
 		 * the board, or an empty string if there are no trips */
 		public String HasTrips()
 		{
-			var counts = new Dictionary<Value, int> ();
-			foreach (Card c in cards) {
-				if (counts.ContainsKey (c.value)) {
-					counts [c.value] += 1;
-				} else {
-					counts.Add (c.value, 1);
-				}
-			}
 			Value highestSeen = 0;
-			foreach (KeyValuePair<Value, int> kvp in counts) {
+			foreach (KeyValuePair<Value, int> kvp in getValueCounts()) {
 				if (kvp.Value == 3 && kvp.Key > highestSeen) {
 					highestSeen = kvp.Key;
 				}
@@ -178,12 +162,38 @@ namespace TexasHoldemHandEvaluator
 
 		public String HasPair()
 		{
-			return "";
+			Value highestSeen = 0;
+			foreach (KeyValuePair<Value, int> kvp in getValueCounts()) {
+				if (kvp.Value == 2 && kvp.Key > highestSeen) {
+					highestSeen = kvp.Key;
+				}
+			}
+
+			if (highestSeen == 0) {
+				return "";
+			}
+			return highestSeen.ToString();
 		}
 
 		public String HasHighCard()
 		{
-			return "";
+			cards.Sort();
+			cards.Reverse();
+			return cards[0].value.ToString();
+		}
+
+		Dictionary<Value,int> getValueCounts ()
+		{
+			var counts = new Dictionary<Value, int>();
+			foreach (Card c in cards) {
+				if (counts.ContainsKey (c.value)) {
+					counts [c.value] += 1;
+				}
+				else {
+					counts.Add (c.value, 1);
+				}
+			}
+			return counts;
 		}
 	}
 }
