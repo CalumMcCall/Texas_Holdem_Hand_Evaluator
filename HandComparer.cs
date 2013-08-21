@@ -17,8 +17,6 @@ namespace TexasHoldemHandEvaluator
 			c.Add (new Card(Suit.Clubs, Value.Three));
 			hc.Add (new Card(Suit.Clubs, Value.Eight));
 			hc.Add (new Card(Suit.Clubs, Value.Four));
-			var test = new Hand (c, hc);
-			Console.WriteLine("lol"+ test.HasQuads());
 		}
 	}
 }

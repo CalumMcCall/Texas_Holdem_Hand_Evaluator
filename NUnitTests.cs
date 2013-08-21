@@ -4,197 +4,224 @@ using NUnit.Framework;
 
 namespace TexasHoldemHandEvaluator
 {	
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasStraightFlush
 	{
-		[Test()]
+		[Test]
 		public void TestHasStraightFlushHearts ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Queen));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.King));
-			hc.Add (new Card(Suit.Spades, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual (new Card(Suit.Hearts, Value.Ace), test.HasStraightFlush());
+			c.Add (new Card(Suit.Hearts, Value.King));
+			c.Add (new Card(Suit.Spades, Value.Ten));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.King));
+			expected.Add (new Card(Suit.Hearts, Value.Queen));
+			expected.Add (new Card(Suit.Hearts, Value.Jack));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasStraightFlush(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightFlushFail ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual (null, test.HasStraightFlush());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (null, Hand.HasStraightFlush(c));
 		}
 
-		[Test()]
-		public void TestHasStraightFlushSpades ()
+		[Test]
+		public void TestHasStraightFlushSixCard ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
-			c.Add (new Card(Suit.Spades, Value.Ace));
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
+			c.Add (new Card(Suit.Spades, Value.Nine));
 			c.Add (new Card(Suit.Spades, Value.Queen));
 			c.Add (new Card(Suit.Spades, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
-			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Spades, Value.King));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual (new Card(Suit.Spades, Value.Ace), test.HasStraightFlush());
+			c.Add (new Card(Suit.Clubs, Value.Eight));
+			c.Add (new Card(Suit.Spades, Value.King));
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+
+			expected.Add (new Card(Suit.Spades, Value.King));
+			expected.Add (new Card(Suit.Spades, Value.Queen));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Spades, Value.Ten));
+			expected.Add (new Card(Suit.Spades, Value.Nine));
+			Assert.AreEqual (expected, Hand.HasStraightFlush(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightFlushSpadesLow ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Spades, Value.Nine));
 			c.Add (new Card(Suit.Spades, Value.Queen));
 			c.Add (new Card(Suit.Spades, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Spades, Value.King));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual (new Card(Suit.Spades, Value.King), test.HasStraightFlush());
+			c.Add (new Card(Suit.Spades, Value.King));
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+
+			expected.Add (new Card(Suit.Spades, Value.King));
+			expected.Add (new Card(Suit.Spades, Value.Queen));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Spades, Value.Ten));
+			expected.Add (new Card(Suit.Spades, Value.Nine));
+			Assert.AreEqual (expected, Hand.HasStraightFlush(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightFlushWheel ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Spades, Value.Two));
 			c.Add (new Card(Suit.Spades, Value.Three));
 			c.Add (new Card(Suit.Spades, Value.Five));
 			c.Add (new Card(Suit.Spades, Value.Four));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Spades, Value.Ace));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual (new Card(Suit.Spades, Value.Five), test.HasStraightFlush());
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+
+			expected.Add (new Card(Suit.Spades, Value.Five));
+			expected.Add (new Card(Suit.Spades, Value.Four));
+			expected.Add (new Card(Suit.Spades, Value.Three));
+			expected.Add (new Card(Suit.Spades, Value.Two));
+			expected.Add (new Card(Suit.Spades, Value.Ace));
+			Assert.AreEqual (expected, Hand.HasStraightFlush(c));
 		}
 	}
 
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasQuads
 	{
-		[Test()]
+		[Test]
 		public void TestHasQuadsNormal ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Ten));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Ten", test.HasQuads());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Clubs, Value.Ten));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Spades, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			Assert.AreEqual (expected, Hand.HasQuads(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasQuadsTrips ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasQuads());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (null, Hand.HasQuads(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasQuadsNoPairs ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Three));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasQuads());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Three));
+			Assert.AreEqual (null, Hand.HasQuads(c));
 		}
 	}
 
 	
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasFullHouse
 	{
 	}
 
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasFlush
 	{
 		[Test]
 		public void TestHasFlush ()
 		{
 			var c = new List<Card> ();
-			var hc = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Hearts, Value.Queen));
-			hc.Add (new Card(Suit.Clubs, Value.Seven));
-			hc.Add (new Card(Suit.Hearts, Value.Six));
-			var test = new Hand (c, hc);
-			Assert.AreEqual (new Card(Suit.Hearts, Value.Ace), test.HasFlush());
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Queen));
+			expected.Add (new Card(Suit.Hearts, Value.Jack));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Six));
+			Assert.AreEqual (expected, Hand.HasFlush(c));
 		}
 
 		[Test]
 		public void TestHasFlushSixCard ()
 		{
 			var c = new List<Card> ();
-			var hc = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Three));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Hearts, Value.Queen));
-			hc.Add (new Card(Suit.Hearts, Value.Seven));
-			hc.Add (new Card(Suit.Hearts, Value.Six));
-			var test = new Hand (c, hc);
-			Assert.AreEqual(new Card(Suit.Hearts, Value.Queen), test.HasFlush());
+			c.Add (new Card(Suit.Hearts, Value.Seven));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+
+			expected.Add (new Card(Suit.Hearts, Value.Queen));
+			expected.Add (new Card(Suit.Hearts, Value.Jack));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Seven));
+			expected.Add (new Card(Suit.Hearts, Value.Six));
+			Assert.AreEqual(expected, Hand.HasFlush(c));
 		}
 
 		[Test]
 		public void TestHasFlushFourCard ()
 		{
 			var c = new List<Card> ();
-			var hc = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Hearts, Value.Queen));
-			hc.Add (new Card(Suit.Clubs, Value.Seven));
-			hc.Add (new Card(Suit.Clubs, Value.Six));
-			var test = new Hand (c, hc);
-			Assert.AreEqual (null, test.HasFlush());
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+			c.Add (new Card(Suit.Clubs, Value.Six));
+			Assert.AreEqual (null, Hand.HasFlush(c));
 		}
 
 	}
@@ -206,300 +233,350 @@ namespace TexasHoldemHandEvaluator
 		public void TestHasStraightNormal ()
 		{
 			var c = new List<Card> ();
-			var hc = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Queen));
-			hc.Add (new Card(Suit.Clubs, Value.Seven));
-			hc.Add (new Card(Suit.Clubs, Value.Six));
-			var test = new Hand (c, hc);
-			Assert.AreEqual ("Ace", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+			c.Add (new Card(Suit.Clubs, Value.Six));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Diamonds, Value.King));
+			expected.Add (new Card(Suit.Clubs, Value.Queen));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasStraight(c));
 		}
 
 		[Test]
 		public void TestHasStraightLastCards ()
 		{
 			var c = new List<Card> ();
-			var hc = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Ten));
 			c.Add (new Card(Suit.Clubs, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.Six));
-			hc.Add (new Card(Suit.Clubs, Value.Seven));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Ten", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Six));
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+
+			expected.Add (new Card(Suit.Spades, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			expected.Add (new Card(Suit.Clubs, Value.Eight));
+			expected.Add (new Card(Suit.Clubs, Value.Seven));
+			expected.Add (new Card(Suit.Clubs, Value.Six));
+			Assert.AreEqual (expected, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightWheel ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Five));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Two));
 			c.Add (new Card(Suit.Clubs, Value.Three));
-			hc.Add (new Card(Suit.Clubs, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.Four));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Five", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Eight));
+			c.Add (new Card(Suit.Clubs, Value.Four));
+
+			expected.Add (new Card(Suit.Hearts, Value.Five));
+			expected.Add (new Card(Suit.Clubs, Value.Four));
+			expected.Add (new Card(Suit.Clubs, Value.Three));
+			expected.Add (new Card(Suit.Spades, Value.Two));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			Assert.AreEqual (expected, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightOffset ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Diamonds, Value.Eight));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Queen));
-			hc.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Clubs, Value.Ace));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Queen", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Two));
+			c.Add (new Card(Suit.Clubs, Value.Ace));
+
+			expected.Add (new Card(Suit.Clubs, Value.Queen));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			expected.Add (new Card(Suit.Diamonds, Value.Eight));
+			Assert.AreEqual (expected, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightGap ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.Seven));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Jack", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Clubs, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			expected.Add (new Card(Suit.Clubs, Value.Eight));
+			expected.Add (new Card(Suit.Clubs, Value.Seven));
+			Assert.AreEqual (expected, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightFourCard ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.Five));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (null, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightFourCardWheel ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Hearts, Value.Five));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Two));
 			c.Add (new Card(Suit.Clubs, Value.Three));
-			hc.Add (new Card(Suit.Clubs, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.Four));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Eight));
+			c.Add (new Card(Suit.Clubs, Value.Four));
+			Assert.AreEqual (null, Hand.HasStraight(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasStraightThreeCard ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Clubs, Value.Five));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasStraight());
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (null, Hand.HasStraight(c));
 		}
 	}
 
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasTrips
 	{
-		[Test()]
+		[Test]
 		public void TestHasTripsNormal ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Ten", test.HasTrips());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Clubs, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			Assert.AreEqual (expected, Hand.HasTrips(c));
 		}
 
-		[Test()]
+		/* This test checks for functionality required for
+		 * HasFullHouse() */
+		[Test]
 		public void TestHasTripsTwo ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Jack));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Jack", test.HasTrips());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+
+			expected.Add (new Card(Suit.Hearts, Value.Jack));
+			expected.Add (new Card(Suit.Clubs, Value.Jack));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasTrips(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasTripsPair ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ace));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Ten));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasTrips());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (null, Hand.HasTrips(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasTripsNoPairs ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.King));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Ten));
-			hc.Add (new Card(Suit.Clubs, Value.Three));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasTrips());
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Three));
+			Assert.AreEqual (null, Hand.HasTrips(c));
 		}
 	}
-	
-	[TestFixture()]
+
+	[TestFixture]
 	public class NUnitTestHasPair
 	{
-		[Test()]
+		[Test]
 		public void TestHasPairAces ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card>();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.King));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Three));
-			hc.Add (new Card(Suit.Clubs, Value.Ace));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Ace", test.HasPair());
+			c.Add (new Card(Suit.Hearts, Value.Three));
+			c.Add (new Card(Suit.Clubs, Value.Ace));
+
+			expected.Add (new Card(Suit.Clubs, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.King));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			Assert.AreEqual (expected, Hand.HasPair(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasPairThrees ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card>();
 			c.Add (new Card(Suit.Hearts, Value.Three));
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Jack));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Three));
-			hc.Add (new Card(Suit.Clubs, Value.Five));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Three", test.HasPair());
+			c.Add (new Card(Suit.Spades, Value.Three));
+			c.Add (new Card(Suit.Clubs, Value.Five));
+
+			expected.Add (new Card(Suit.Hearts, Value.Three));
+			expected.Add (new Card(Suit.Hearts, Value.Three));
+			expected.Add (new Card(Suit.Spades, Value.Jack));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			Assert.AreEqual (expected, Hand.HasPair(c));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasPairFail ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Three));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Five));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.King));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("", test.HasPair());
+			c.Add (new Card(Suit.Hearts, Value.Eight));
+			c.Add (new Card(Suit.Clubs, Value.King));
+			Assert.AreEqual (null, Hand.HasPair(c));
 		}
 	}
 	
-	[TestFixture()]
+	[TestFixture]
 	public class NUnitTestHasHighCard
 	{
-		[Test()]
+		[Test]
 		public void TestHasHighCardAce ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card>();
 			c.Add (new Card(Suit.Hearts, Value.Ace));
 			c.Add (new Card(Suit.Hearts, Value.Three));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Five));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.King));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Ace", test.HasHighCard());
+			c.Add (new Card(Suit.Hearts, Value.Eight));
+			c.Add (new Card(Suit.Clubs, Value.King));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Clubs, Value.King));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Eight));
+			expected.Add (new Card(Suit.Spades, Value.Five));
+			Assert.AreEqual (expected, Hand.GetHighCards(c, 5));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasHighCardKing ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card>();
 			c.Add (new Card(Suit.Hearts, Value.Seven));
 			c.Add (new Card(Suit.Hearts, Value.Three));
 			c.Add (new Card(Suit.Diamonds, Value.Ten));
 			c.Add (new Card(Suit.Spades, Value.Five));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Eight));
-			hc.Add (new Card(Suit.Clubs, Value.King));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("King", test.HasHighCard());
+			c.Add (new Card(Suit.Hearts, Value.Eight));
+			c.Add (new Card(Suit.Clubs, Value.King));
+
+			expected.Add (new Card(Suit.Clubs, Value.King));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			expected.Add (new Card(Suit.Hearts, Value.Eight));
+			expected.Add (new Card(Suit.Hearts, Value.Seven));
+			expected.Add (new Card(Suit.Spades, Value.Five));
+			Assert.AreEqual (expected, Hand.GetHighCards(c, 5));
 		}
 
-		[Test()]
+		[Test]
 		public void TestHasHighCardLow ()
 		{
-			List<Card> c = new List<Card> ();
-			List<Card> hc = new List<Card> ();
+			var c = new List<Card> ();
+			var expected = new List<Card>();
 			c.Add (new Card(Suit.Hearts, Value.Nine));
 			c.Add (new Card(Suit.Hearts, Value.Seven));
 			c.Add (new Card(Suit.Diamonds, Value.Five));
 			c.Add (new Card(Suit.Spades, Value.Eight));
 			c.Add (new Card(Suit.Clubs, Value.Two));
-			hc.Add (new Card(Suit.Hearts, Value.Four));
-			hc.Add (new Card(Suit.Clubs, Value.Three));
-			Hand test = new Hand (c, hc);
-			Assert.AreEqual ("Nine", test.HasHighCard());
+			c.Add (new Card(Suit.Hearts, Value.Four));
+			c.Add (new Card(Suit.Clubs, Value.Three));
+
+			expected.Add (new Card(Suit.Hearts, Value.Nine));
+			expected.Add (new Card(Suit.Spades, Value.Eight));
+			expected.Add (new Card(Suit.Hearts, Value.Seven));
+			expected.Add (new Card(Suit.Diamonds, Value.Five));
+			expected.Add (new Card(Suit.Hearts, Value.Four));
+			Assert.AreEqual (expected, Hand.GetHighCards(c, 5));
 		}
 	}
 }

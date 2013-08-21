@@ -7,79 +7,62 @@ namespace TexasHoldemHandEvaluator
 	 * and returns a string detailing the best 5-card hand */
 	public class Hand
 	{
-		List<Card> cards;
 
-		public Hand (List<Card> b, List<Card> hc)
+		public static List<Card> HasStraightFlush(List<Card> cards)
 		{
-			cards = new List<Card> ();
-			foreach(Card c in b)
-			{
-				cards.Add (c.DeepCopy());
-			}
-			foreach(Card c in hc)
-			{
-				cards.Add (c.DeepCopy());
-			}
-		}
-
-		Hand (List<Card> cs)
-		{
-			cards = new List<Card> ();
-			foreach(Card c in cs)
-			{
-				cards.Add (c.DeepCopy());
-			}
-		}
-
-		public Card HasStraightFlush()
-		{
-			Card highest = HasFlush();
+			var highest = HasFlush(cards);
 			if(highest == null) {
 				return null;
 			}
 
 			var flushCards = new List<Card>();
 			foreach(Card c in cards) {
-				if(c.suit == highest.suit) {
+				if(c.suit == highest[0].suit) {
 					flushCards.Add(c);
 				}
 			}
-			var newHand = new Hand(flushCards);
-			String card = newHand.HasStraight();
-			if(card == ""){
-				return null;
-			}
-
-			try {
-				var handValue = (Value) Enum.Parse(typeof(Value), card);
-				if(Enum.IsDefined(typeof(Value), handValue)) {
-					return new Card(highest.suit, handValue);
-				}
-				return null;
-			} catch (ArgumentException) {
-				Console.Error.WriteLine("HasStraight() returned an invalid card Value!");
-				return null;
-			}
+			return Hand.HasStraight(flushCards);
 		}
 		
 		/* Returns the Card value of the quads on the board, or 
 		 * an empty string if there are no quads */
-		public String HasQuads()
+		public static List<Card> HasQuads(List<Card> cards)
 		{
-			foreach(KeyValuePair<Value, int> kvp in getValueCounts ()) {
+			Value highestSeen = 0;
+			var hand = new List<Card>();
+			var cardsCopy = cards.GetRange(0, cards.Count);
+			foreach(KeyValuePair<Value, int> kvp in Hand.GetValueCounts(cards)) {
 				if(kvp.Value == 4) {
-					return kvp.Key.ToString();
+					highestSeen = kvp.Key;
 				}
 			}
 
-			return "";
+			if (highestSeen == 0) {
+				return null;
+			}
+
+			foreach(Card c in cards) {
+				if(c.value == highestSeen) {
+					hand.Add(c);
+					cardsCopy.Remove(c);
+				}
+			}
+			hand.AddRange(Hand.GetHighCards(cardsCopy, 1));
+			return hand;
+		}
+
+		public static List<Card> HasFullHouse(List<Card> cards)
+		{
+
+			return null;
 		}
 
 		/* Checks for a flush and if found, returns the highest card
 		 * in the flush, else null */
-		public Card HasFlush()
+		public static List<Card> HasFlush(List<Card> cards)
 		{
 			var counts = new Dictionary<Suit, int> ();
+			var hand = new List<Card>();
 			foreach (Card c in cards) {
 				if (counts.ContainsKey (c.suit)) {
 					counts [c.suit] += 1;
@@ -87,15 +70,16 @@ namespace TexasHoldemHandEvaluator
 					counts.Add (c.suit, 1);
 				}
 			}
-			Value highestSeen = 0;
 			foreach (KeyValuePair<Suit, int> kvp in counts) {
 				if (kvp.Value >= 5) {
 					foreach(Card c in cards) {
-						if(c.suit.Equals(kvp.Key) && c.value > highestSeen) {
-							highestSeen = c.value;
+						if(c.suit.Equals(kvp.Key)) {
+							hand.Add(c);
 						}
 					}
-					return new Card(kvp.Key, highestSeen);
+					hand.Sort();
+					hand.Reverse();
+					return hand.GetRange(0, 5);
 				}
 			}
 
@@ -105,87 +89,114 @@ namespace TexasHoldemHandEvaluator
 
 		/* Returns the highest card in the straight,
 		 * or an empty string if there is no straight */
-		public String HasStraight()
+		public static List<Card> HasStraight(List<Card> cards)
 		{
 			cards.Sort ();
 			cards.Reverse ();
-			Value curVal = cards[0].value;
-			Value highestCard = curVal;
-			int count = 1;
-			for (int i = 0; i < cards.Count; i++) {
-				if (cards [i].value == curVal - 1) {
-					count++;
-					if (count >= 5) {
-						//we are done
-						return highestCard.ToString ();
+			var hand = new List<Card>();
+			hand.Add(cards[0]);
+			for (int i = 1; i < cards.Count; i++) {
+				if (cards [i].value == hand[hand.Count-1].value-1) {
+					hand.Add(cards[i]);
+					if (hand.Count >= 5) {
+						return hand;
 					}
-					if (highestCard == Value.Five && curVal == Value.Three) {
+					if (hand[0].value == Value.Five && hand[hand.Count-1].value == Value.Three) {
 						//Need to handle the ace playing low for straights
 						//the card suit here is unimportant, it just has to be something
 						if (cards.Contains (new Card (Suit.Clubs, Value.Ace)) &&
 							cards.Contains (new Card (Suit.Clubs, Value.Two))) {
-							return highestCard.ToString ();
+							hand.Add(cards.FindLast(x => x.value == Value.Two));
+							hand.Add(cards.FindLast(x => x.value == Value.Ace));
+							return hand;
 						}
-						return "";
+						return null;
 					}
-					curVal -= 1;
 					continue;
 				}
 				if (i == 4) {
-					return "";
+					return null;
 				}
 				//there might still be a straight
-				highestCard = cards [i].value;
-				curVal = highestCard;
-				count = 1;
+				hand.Clear();
+				hand.Add(cards[i]);
 			}
 
-			return ""; //here to keep the compiler happy
+			return null;
 		}
 
 		/* Returns the Card value of the highest trips on 
 		 * the board, or an empty string if there are no trips */
-		public String HasTrips()
+		public static List<Card> HasTrips(List<Card> cards)
 		{
 			Value highestSeen = 0;
-			foreach (KeyValuePair<Value, int> kvp in getValueCounts()) {
+			var hand = new List<Card>();
+			var cardsCopy = cards.GetRange(0, cards.Count);
+			foreach (KeyValuePair<Value, int> kvp in Hand.GetValueCounts(cards)) {
 				if (kvp.Value == 3 && kvp.Key > highestSeen) {
 					highestSeen = kvp.Key;
 				}
 			}
 
 			if (highestSeen == 0) {
-				return "";
+				return null;
 			}
-			return highestSeen.ToString ();
+
+			foreach(Card c in cards) {
+				if(c.value == highestSeen) {
+					hand.Add(c);
+					cardsCopy.Remove(c);
+				}
+			}
+			hand.AddRange(Hand.GetHighCards(cardsCopy, 2));
+			return hand;
 		}
 
-		public String HasPair()
+		public static List<Card> HasTwoPair(List<Card> cards)
+		{
+			return null;
+		}
+
+		public static List<Card> HasPair(List<Card> cards)
 		{
 			Value highestSeen = 0;
-			foreach (KeyValuePair<Value, int> kvp in getValueCounts()) {
+			var hand = new List<Card>();
+			var cardsCopy = cards.GetRange(0, cards.Count);
+			foreach (KeyValuePair<Value, int> kvp in Hand.GetValueCounts(cards)) {
 				if (kvp.Value == 2 && kvp.Key > highestSeen) {
 					highestSeen = kvp.Key;
 				}
 			}
 
 			if (highestSeen == 0) {
-				return "";
+				return null;
 			}
-			return highestSeen.ToString();
+
+			foreach(Card c in cards) {
+				if(c.value == highestSeen) {
+					hand.Add(c);
+					cardsCopy.Remove(c);
+				}
+			}
+			hand.AddRange(Hand.GetHighCards(cardsCopy, 3));
+			return hand;
 		}
 
-		public String HasHighCard()
+		public static List<Card> GetHighCards(List<Card> cards, int count)
 		{
 			cards.Sort();
 			cards.Reverse();
-			return cards[0].value.ToString();
+			var newCards = new List<Card>();
+			for(int i = 0; i < count; i++) {
+				newCards.Add(cards[i].DeepCopy());
+			}
+			return newCards;
 		}
 
-		Dictionary<Value,int> getValueCounts ()
+		static Dictionary<Value,int> GetValueCounts (List<Card> cs)
 		{
 			var counts = new Dictionary<Value, int>();
-			foreach (Card c in cards) {
+			foreach (Card c in cs) {
 				if (counts.ContainsKey (c.value)) {
 					counts [c.value] += 1;
 				}

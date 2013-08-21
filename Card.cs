@@ -18,54 +18,53 @@ namespace TexasHoldemHandEvaluator
 			if (obj == null)
 				return 1;
 
-			Card c = obj as Card;
+			var c = obj as Card;
 			if (c != null) {
-				return this.value - c.value;
-			} else {
-				throw new ArgumentException ("Object is not a Card");
+				return value - c.value;
 			}
+			throw new ArgumentException ("Object is not a Card");
 		}
 
 		public Card DeepCopy()
 		{
-			return new Card (this.suit, this.value);
+			return new Card (suit, value);
 		}
 
 		public override string ToString()
 		{
 			String s = "";
-			if(this.value == Value.Ace)
+			if(value == Value.Ace)
 				s += "A";
-			else if(this.value == Value.King)
+			else if(value == Value.King)
 				s += "K";
-			else if(this.value == Value.Queen)
+			else if(value == Value.Queen)
 				s += "Q";
-			else if(this.value == Value.Jack)
+			else if(value == Value.Jack)
 				s += "J";
-			else if(this.value == Value.Ten)
+			else if(value == Value.Ten)
 				s += "T";
-			else if(this.value == Value.Nine)
+			else if(value == Value.Nine)
 				s += "9";
-			else if(this.value == Value.Eight)
+			else if(value == Value.Eight)
 				s += "8";
-			else if(this.value == Value.Seven)
+			else if(value == Value.Seven)
 				s += "7";
-			else if(this.value == Value.Six)
+			else if(value == Value.Six)
 				s += "6";
-			else if(this.value == Value.Five)
+			else if(value == Value.Five)
 				s += "5";
-			else if(this.value == Value.Four)
+			else if(value == Value.Four)
 				s += "4";
-			else if(this.value == Value.Three)
+			else if(value == Value.Three)
 				s += "3";
-			else if(this.value == Value.Two)
+			else if(value == Value.Two)
 				s += "2";
 
-			if(this.suit == Suit.Spades)
+			if(suit == Suit.Spades)
 				s += "s";
-			else if(this.suit == Suit.Clubs)
+			else if(suit == Suit.Clubs)
 				s += "c";
-			else if(this.suit == Suit.Diamonds)
+			else if(suit == Suit.Diamonds)
 				s += "d";
 			else if(suit == Suit.Hearts)
 				s += "h";
@@ -82,13 +81,13 @@ namespace TexasHoldemHandEvaluator
 			}
 
 			// If parameter cannot be cast to Card return false.
-			Card c = obj as Card;
+			var c = obj as Card;
 			if (c == null)
 			{
 				return false;
 			}
 
-			return (c.value == this.value);
+			return (c.value == value);
 		}
 
 		public override int GetHashCode() {
