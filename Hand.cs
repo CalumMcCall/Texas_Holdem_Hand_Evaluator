@@ -53,8 +53,23 @@ namespace TexasHoldemHandEvaluator
 
 		public static List<Card> HasFullHouse(List<Card> cards)
 		{
+			var hand = new List<Card>();
+			var cardsCopy = cards.GetRange(0, cards.Count);
+			var trips = Hand.HasTrips(cards);
+			if(trips == null) {
+				return null;
+			}
+			trips = trips.GetRange(0,3);
 
-			return null;
+			cardsCopy.RemoveAll (trips.Contains);
+
+			var pair = Hand.HasPair(cardsCopy);
+			if(pair == null) {
+				return null;
+			}
+			hand.AddRange(trips);
+			hand.AddRange(pair.GetRange(0,2));
+			return hand;
 		}
 
 		/* Checks for a flush and if found, returns the highest card
@@ -154,7 +169,24 @@ namespace TexasHoldemHandEvaluator
 
 		public static List<Card> HasTwoPair(List<Card> cards)
 		{
-			return null;
+			var cardsCopy = cards.GetRange(0, cards.Count);
+			var biggestPair = Hand.HasPair(cards);
+			var hand = new List<Card>();
+			if(biggestPair == null) {
+				return null;
+			}
+
+			biggestPair = biggestPair.GetRange(0,2);
+
+			cardsCopy.RemoveAll(biggestPair.Contains);
+			var secondPair = Hand.HasPair(cardsCopy);
+			if(secondPair == null) {
+				return null;
+			}
+
+			hand.AddRange(biggestPair);
+			hand.AddRange(secondPair.GetRange(0,3));
+			return hand;
 		}
 
 		public static List<Card> HasPair(List<Card> cards)
@@ -178,7 +210,12 @@ namespace TexasHoldemHandEvaluator
 					cardsCopy.Remove(c);
 				}
 			}
-			hand.AddRange(Hand.GetHighCards(cardsCopy, 3));
+			/* HasPair is sometimes called with cards.Count < 7 (see HasFullHouse) 
+			 * so we need to handle that by returning the best partial hand */
+			hand.AddRange(Hand.GetHighCards(cardsCopy, cards.Count-hand.Count));
+			if(hand.Count > 5) {
+				return hand.GetRange(0, 5);
+			}
 			return hand;
 		}
 

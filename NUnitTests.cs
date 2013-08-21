@@ -163,6 +163,89 @@ namespace TexasHoldemHandEvaluator
 	[TestFixture]
 	public class NUnitTestHasFullHouse
 	{
+		[Test]
+		public void TestHasFullHouse ()
+		{
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Ten));
+			c.Add (new Card(Suit.Clubs, Value.Seven));
+			c.Add (new Card(Suit.Diamonds, Value.Ace));
+			c.Add (new Card(Suit.Clubs, Value.Ten));
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Diamonds, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			expected.Add (new Card(Suit.Clubs, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasFullHouse(c));
+		}
+
+		[Test]
+		public void TestHasFullHouseTwoPair ()
+		{
+			var c = new List<Card> ();
+			var expected = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Five));
+			c.Add (new Card(Suit.Clubs, Value.Six));
+			c.Add (new Card(Suit.Diamonds, Value.Ace));
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Diamonds, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Six));
+			expected.Add (new Card(Suit.Clubs, Value.Six));
+			Assert.AreEqual (expected, Hand.HasFullHouse(c));
+		}
+		
+		[Test]
+		public void TestHasFullHouseNoPair ()
+		{
+			var c = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Two));
+			c.Add (new Card(Suit.Clubs, Value.Three));
+			c.Add (new Card(Suit.Diamonds, Value.Ace));
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+			Assert.AreEqual (null, Hand.HasFullHouse(c));
+		}
+
+		[Test]
+		public void TestHasFullHouseNoPairNoTrips ()
+		{
+			var c = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Two));
+			c.Add (new Card(Suit.Clubs, Value.Three));
+			c.Add (new Card(Suit.Diamonds, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+			Assert.AreEqual (null, Hand.HasFullHouse(c));
+		}
+		
+		[Test]
+		public void TestHasFullHouseNoTrips ()
+		{
+			var c = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Two));
+			c.Add (new Card(Suit.Clubs, Value.Six));
+			c.Add (new Card(Suit.Diamonds, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Five));
+			c.Add (new Card(Suit.Spades, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+			Assert.AreEqual (null, Hand.HasFullHouse(c));
+		}
 	}
 
 	[TestFixture]
@@ -450,6 +533,66 @@ namespace TexasHoldemHandEvaluator
 			c.Add (new Card(Suit.Hearts, Value.Ten));
 			c.Add (new Card(Suit.Clubs, Value.Three));
 			Assert.AreEqual (null, Hand.HasTrips(c));
+		}
+	}
+	
+	[TestFixture]
+	public class NUnitTestHasTwoPair
+	{
+		[Test]
+		public void TestHasTwoPair ()
+		{
+			var c = new List<Card> ();
+			var expected = new List<Card>();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Nine));
+			c.Add (new Card(Suit.Diamonds, Value.Ten));
+			c.Add (new Card(Suit.Spades, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Two));
+			c.Add (new Card(Suit.Hearts, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Ace));
+
+			expected.Add (new Card(Suit.Clubs, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.King));
+			expected.Add (new Card(Suit.Hearts, Value.King));
+			expected.Add (new Card(Suit.Hearts, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasTwoPair(c));
+		}
+
+		[Test]
+		public void TestHasTwoPairThreePair ()
+		{
+			var c = new List<Card> ();
+			var expected = new List<Card>();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Nine));
+			c.Add (new Card(Suit.Diamonds, Value.Ten));
+			c.Add (new Card(Suit.Spades, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Nine));
+			c.Add (new Card(Suit.Hearts, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Ace));
+
+			expected.Add (new Card(Suit.Clubs, Value.Ace));
+			expected.Add (new Card(Suit.Hearts, Value.Ace));
+			expected.Add (new Card(Suit.Spades, Value.King));
+			expected.Add (new Card(Suit.Hearts, Value.King));
+			expected.Add (new Card(Suit.Diamonds, Value.Ten));
+			Assert.AreEqual (expected, Hand.HasTwoPair(c));
+		}
+
+		[Test]
+		public void TestHasTwoPairFail ()
+		{
+			var c = new List<Card> ();
+			c.Add (new Card(Suit.Hearts, Value.Ace));
+			c.Add (new Card(Suit.Hearts, Value.Nine));
+			c.Add (new Card(Suit.Diamonds, Value.Ten));
+			c.Add (new Card(Suit.Spades, Value.King));
+			c.Add (new Card(Suit.Clubs, Value.Two));
+			c.Add (new Card(Suit.Hearts, Value.Six));
+			c.Add (new Card(Suit.Clubs, Value.Ace));
+			Assert.AreEqual (null, Hand.HasTwoPair(c));
 		}
 	}
 
